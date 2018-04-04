@@ -3,15 +3,15 @@ package main
 import (
 	"database/sql"
 
-	"go-echo-vue/handlers"
+	"./handlers"
 
+	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
-	_ "github.com/mattn/go-sqlite3"
 )
 
 func main() {
+	db := initDB("<USERNAME>:<PASSWORD>@/?charset=utf8")
 
-	db := initDB("storage.db")
 	migrate(db)
 
 	e := echo.New()
@@ -24,8 +24,8 @@ func main() {
 	e.Start(":8000")
 }
 
-func initDB(filepath string) *sql.DB {
-	db, err := sql.Open("sqlite3", filepath)
+func initDB(dbString string) *sql.DB {
+	db, err := sql.Open("mysql", dbString)
 
 	// Here we check for any db errors then exit
 	if err != nil {
@@ -41,14 +41,29 @@ func initDB(filepath string) *sql.DB {
 }
 
 func migrate(db *sql.DB) {
+
+	sqlDB := `CREATE DATABASE IF NOT EXISTS todos`
+
+	_, errDB := db.Exec(sqlDB)
+	// Exit if something goes wrong with our SQL statement above
+	if errDB != nil {
+		panic(errDB)
+	}
+
+	_, err := db.Exec("USE todos")
+	if err != nil {
+		panic(err)
+	}
+
 	sql := `
 	CREATE TABLE IF NOT EXISTS tasks(
-		id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
-		name VARCHAR NOT NULL
+		id INT NOT NULL AUTO_INCREMENT,
+		name VARCHAR(50) NOT NULL,
+		PRIMARY KEY (id)
 	);
 	`
 
-	_, err := db.Exec(sql)
+	_, err = db.Exec(sql)
 	// Exit if something goes wrong with our SQL statement above
 	if err != nil {
 		panic(err)
