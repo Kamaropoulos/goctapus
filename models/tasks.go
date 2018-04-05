@@ -3,7 +3,7 @@ package models
 import (
 	"database/sql"
 
-	_ "github.com/mattn/go-sqlite3"
+	_ "github.com/go-sql-driver/mysql"
 )
 
 // Task is a struct containing Task data

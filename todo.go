@@ -3,7 +3,7 @@ package main
 import (
 	"database/sql"
 
-	"./handlers"
+	"github.com/Kamaropoulos/go-echo-vue-mysql/handlers"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
