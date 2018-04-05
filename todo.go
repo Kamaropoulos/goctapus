@@ -11,10 +11,24 @@ import (
 )
 
 func main() {
+	host := os.Getenv("TODODBHOST")
+	port := os.Getenv("TODODBPORT")
 	username := os.Getenv("TODODBUSER")
 	password := os.Getenv("TODODBPASS")
 
-	db := initDB(username + ":" + password + "@/?charset=utf8")
+	if host == "" {
+		host = "localhost"
+	}
+
+	if port == "" {
+		port = "3306"
+	}
+
+	if username == "" {
+		username = "root"
+	}
+
+	db := initDB(username + ":" + password + "@tcp(" + host + ":" + port + ")/?charset=utf8")
 
 	migrate(db)
 
