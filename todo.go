@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"os"
 
 	"github.com/Kamaropoulos/go-echo-vue-mysql/handlers"
 
@@ -10,7 +11,10 @@ import (
 )
 
 func main() {
-	db := initDB("<USERNAME>:<PASSWORD>@/?charset=utf8")
+	username := os.Getenv("TODODBUSER")
+	password := os.Getenv("TODODBPASS")
+
+	db := initDB(username + ":" + password + "@/?charset=utf8")
 
 	migrate(db)
 
