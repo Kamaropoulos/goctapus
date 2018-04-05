@@ -4,34 +4,37 @@ This is a simple todo web app written in Go and using the Echo Framework
 
 This repository is a fork of [ezynda3/go-echo-vue](https://github.com/ezynda3/go-echo-vue) with the difference of using MySQL instead of SQLite3 for the Database
 
-To get it running:
+To get it running using Docker:
 
-#### 1. Clone this repository and Echo
+#### 1. Clone this repository
 ```bash
 go get github.com/Kamaropoulos/go-echo-vue-mysql
-go get github.com/labstack/echo
 ```
 
 
-#### 2. MySQL Database
-If you have MySQL up and running you can skip this step
-
-If not, the following commands will start a Docker MySQL container
-
-Don't forget to change your password, you're going to need it for the next step
+#### 2. Create a new Docker network
 ```bash
-docker run -p 3306:3306 --name todo-mysql -e MYSQL_ROOT_PASSWORD=<PASSWORD> -d mysql:latest
+docker network create todo-network
 ```
 
 
-#### 3. Set MySQL username and password
-You will have to change the username and password on the database connection string on [todo.go](todo.go#L13)
-
-
-#### 4. Run the server
+#### 3. Create a new MySQL container
 ```bash
-go run todo.go
+docker run --name=todo-mysql --network=todo-network -p 3306:3306 -e MYSQL_ROOT_PASSWORD=rootpass -e MYSQL_DATABASE=todos -e MYSQL_USER=todouser -e MYSQL_PASSWORD=todopass -d mysql:latest 
 ```
 
 
-##### To see the application running, point your browser to http://localhost:8000
+#### 4. Build the application image
+```bash
+docker build -t go-echo-vue-mysql -f Dockerfile .
+```
+
+#### 5. Wait for the MySQL Server to startup
+
+
+#### 6. Create a Docker container for the TODO app
+```bash
+docker run --name=todo-app --network=todo-network -p 8000:8000 -e TODODBHOST=todo-mysql -e TODODBUSER=todouser -e TODODBPASS=todopass -d go-echo-vue-mysql
+```
+
+#### To try the application, point your browser to http://localhost:8000
