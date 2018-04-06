@@ -8,7 +8,7 @@ This repository is a fork of [ezynda3/go-echo-vue](https://github.com/ezynda3/go
 
 #### 1. Clone this repository
 ```bash
-go get github.com/Kamaropoulos/go-echo-vue-mysql
+git clone https://github.com/Kamaropoulos/go-echo-vue-mysql.git
 ```
 
 
