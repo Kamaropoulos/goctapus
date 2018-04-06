@@ -1,0 +1,37 @@
+version: '2.3'
+
+services:
+   db:
+     image: mysql:5.7
+     volumes:
+       - dbdata:/var/lib/mysql
+     restart: always
+     networks:
+       - network
+     environment:
+       MYSQL_ROOT_PASSWORD: rootpass
+       MYSQL_DATABASE: todos
+       MYSQL_USER: todouser
+       MYSQL_PASSWORD: todopass
+     healthcheck:
+       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+       timeout: 5s
+       retries: 50
+   app:
+     build: .
+     depends_on:
+       db:
+          condition: service_healthy
+     ports:
+       - "8000:8000"
+     restart: always
+     networks:
+       - network
+     environment:
+       TODODBHOST: db
+       TODODBUSER: todouser
+       TODODBPASS: todopass
+volumes:
+    dbdata:
+networks:
+  network:
