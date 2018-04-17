@@ -10,9 +10,9 @@ services:
        - network
      environment:
        MYSQL_ROOT_PASSWORD: rootpass
-       MYSQL_DATABASE: todos
-       MYSQL_USER: todouser
-       MYSQL_PASSWORD: todopass
+       MYSQL_DATABASE: goapp
+       MYSQL_USER: goappuser
+       MYSQL_PASSWORD: goapppass
      healthcheck:
        test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
        timeout: 5s
@@ -28,9 +28,9 @@ services:
      networks:
        - network
      environment:
-       TODODBHOST: db
-       TODODBUSER: todouser
-       TODODBPASS: todopass
+       GOAPPDBHOST: db
+       GOAPPDBUSER: goappuser
+       GOAPPDBPASS: goapppass
 volumes:
     dbdata:
 networks:

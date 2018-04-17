@@ -11,10 +11,10 @@ import (
 )
 
 func main() {
-	host := os.Getenv("TODODBHOST")
-	port := os.Getenv("TODODBPORT")
-	username := os.Getenv("TODODBUSER")
-	password := os.Getenv("TODODBPASS")
+	host := os.Getenv("GOAPPDBHOST")
+	port := os.Getenv("GOAPPDBPORT")
+	username := os.Getenv("GOAPPDBUSER")
+	password := os.Getenv("GOAPPDBPASS")
 
 	if host == "" {
 		host = "localhost"
@@ -60,7 +60,7 @@ func initDB(dbString string) *sql.DB {
 
 func migrate(db *sql.DB) {
 
-	sqlDB := `CREATE DATABASE IF NOT EXISTS todos`
+	sqlDB := `CREATE DATABASE IF NOT EXISTS goapp`
 
 	_, errDB := db.Exec(sqlDB)
 	// Exit if something goes wrong with our SQL statement above
@@ -68,7 +68,7 @@ func migrate(db *sql.DB) {
 		panic(errDB)
 	}
 
-	_, err := db.Exec("USE todos")
+	_, err := db.Exec("USE goapp")
 	if err != nil {
 		panic(err)
 	}
