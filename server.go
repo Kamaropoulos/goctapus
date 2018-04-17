@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"os"
 
 	"github.com/Kamaropoulos/go-echo-vue-mysql/handlers"
@@ -10,25 +11,73 @@ import (
 	"github.com/labstack/echo"
 )
 
+func getArgs(args []string) (string, string, string, string, string) {
+	var appPort string
+	var dbHost string
+	var dbPort string
+	var dbUser string
+	var dbPass string
+
+	switch argsCount := len(args); argsCount {
+	case 0:
+		// No arguments were passed
+		// Using default configuration values
+		appPort = "8000"
+		dbHost = "localhost"
+		dbPort = "3306"
+		dbUser = "root"
+		dbPass = ""
+	case 1:
+		// There was 1 argument passed, use it as
+		// the port for the app to listen to
+		appPort = args[0]
+		dbHost = "localhost"
+		dbPort = "3306"
+		dbUser = "root"
+		dbPass = ""
+	case 2:
+		// There were 2 arguments passed
+		// Use them as DB username and password
+		appPort = "8000"
+		dbHost = "localhost"
+		dbPort = "3306"
+		dbUser = args[0]
+		dbPass = args[1]
+	case 3:
+		// There were 3 arguments passed
+		// Use them as App Port, DB Username and Password
+		appPort = args[0]
+		dbHost = "localhost"
+		dbPort = "3306"
+		dbUser = args[1]
+		dbPass = args[2]
+	case 4:
+		// There were 4 arguments passed
+		// Use them as App Port, DB Username, Password and Hostname/IP
+		appPort = args[0]
+		dbHost = args[3]
+		dbPort = "3306"
+		dbUser = args[1]
+		dbPass = args[2]
+	case 5:
+		// There were 5 arguments passed covering all configuration parameters
+		// Use them as App Port, DB Username, Password, Hostname/IP and Port
+		appPort = args[0]
+		dbHost = args[3]
+		dbPort = args[4]
+		dbUser = args[1]
+		dbPass = args[2]
+	}
+
+	return appPort, dbHost, dbPort, dbUser, dbPass
+}
+
 func main() {
-	host := os.Getenv("GOAPPDBHOST")
-	port := os.Getenv("GOAPPDBPORT")
-	username := os.Getenv("GOAPPDBUSER")
-	password := os.Getenv("GOAPPDBPASS")
+	appPort, dbHost, dbPort, dbUser, dbPass := getArgs(os.Args[1:])
 
-	if host == "" {
-		host = "localhost"
-	}
+	fmt.Println(appPort, dbHost, dbPort, dbUser, dbPass)
 
-	if port == "" {
-		port = "3306"
-	}
-
-	if username == "" {
-		username = "root"
-	}
-
-	db := initDB(username + ":" + password + "@tcp(" + host + ":" + port + ")/?charset=utf8")
+	db := initDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
 
 	migrate(db)
 
@@ -39,7 +88,7 @@ func main() {
 	e.PUT("/tasks", handlers.PutTask(db))
 	e.DELETE("/tasks/:id", handlers.DeleteTask(db))
 
-	e.Start(":8000")
+	e.Start(":" + appPort)
 }
 
 func initDB(dbString string) *sql.DB {
