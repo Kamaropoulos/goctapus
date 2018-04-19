@@ -28,9 +28,12 @@ services:
      networks:
        - network
      environment:
+       GOAPPPORT: 8000
        GOAPPDBHOST: db
+       GOAPPDBPORT: 3306
        GOAPPDBUSER: goappuser
        GOAPPDBPASS: goapppass
+       
 volumes:
     dbdata:
 networks:
