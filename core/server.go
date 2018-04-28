@@ -3,7 +3,6 @@ package goctapus
 import (
 	"database/sql"
 
-	"github.com/Kamaropoulos/goctapus/handlers"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
 )
@@ -14,7 +13,7 @@ var dbPort string
 var dbUser string
 var dbPass string
 
-var db *sql.DB
+var Database *sql.DB
 
 var e *echo.Echo
 
@@ -96,9 +95,9 @@ func getArgs(args []string) (string, string, string, string, string) {
 func Init(args []string) {
 	appPort, dbHost, dbPort, dbUser, dbPass = getArgs(args[1:])
 
-	db = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
+	Database = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
 
-	Migrate(db)
+	Migrate(Database)
 
 	e = echo.New()
 }
@@ -107,9 +106,22 @@ func Start() {
 	e.Start(":" + appPort)
 }
 
-func AddEndpoints() {
-	e.File("/", "public/index.html")
-	e.GET("/tasks", handlers.GetTasks(db))
-	e.PUT("/tasks", handlers.PutTask(db))
-	e.DELETE("/tasks/:id", handlers.DeleteTask(db))
+func GET(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
+	e.GET(path, handler)
+}
+
+func POST(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
+	e.POST(path, handler)
+}
+
+func PUT(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
+	e.PUT(path, handler)
+}
+
+func DELETE(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
+	e.DELETE(path, handler)
+}
+
+func File(path, file string) {
+	e.File(path, file)
 }
