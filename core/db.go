@@ -2,6 +2,7 @@ package goctapus
 
 import (
 	"database/sql"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -25,30 +26,18 @@ func InitDB(dbString string) *sql.DB {
 
 func Migrate(db *sql.DB) {
 
-	sqlDB := `CREATE DATABASE IF NOT EXISTS goapp`
+	sql := `CREATE DATABASE IF NOT EXISTS goapp;
+			USE goapp;
+			CREATE TABLE IF NOT EXISTS tasks(id INT NOT NULL AUTO_INCREMENT, name VARCHAR(50) NOT NULL, PRIMARY KEY (id));`
 
-	_, errDB := db.Exec(sqlDB)
-	// Exit if something goes wrong with our SQL statement above
-	if errDB != nil {
-		panic(errDB)
+	queries := strings.Split(sql, ";")
+
+	for _, query := range queries[0 : len(queries)-1] {
+		// fmt.Println("--- ", query, " ---")
+		_, err := db.Exec(query)
+		if err != nil {
+			panic(err)
+		}
 	}
 
-	_, err := db.Exec("USE goapp")
-	if err != nil {
-		panic(err)
-	}
-
-	sql := `
-	CREATE TABLE IF NOT EXISTS tasks(
-		id INT NOT NULL AUTO_INCREMENT,
-		name VARCHAR(50) NOT NULL,
-		PRIMARY KEY (id)
-	);
-	`
-
-	_, err = db.Exec(sql)
-	// Exit if something goes wrong with our SQL statement above
-	if err != nil {
-		panic(err)
-	}
 }
