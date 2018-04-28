@@ -2,8 +2,8 @@ package goctapus
 
 import (
 	"database/sql"
+	"fmt"
 	"io/ioutil"
-	"log"
 	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
@@ -26,36 +26,35 @@ func InitDB(dbString string) *sql.DB {
 	return db
 }
 
+func executeSQLFile(db *sql.DB, pathtofile string) {
+	file, err := ioutil.ReadFile(pathtofile)
+
+	if err != nil {
+		panic(err)
+	}
+
+	// split it into seperate queries
+	queries := strings.Split(string(file), ";")
+
+	// and execute them one by one
+	// except for the last one which is expty because of the split
+	for _, query := range queries[0 : len(queries)-1] {
+		_, err := db.Exec(query)
+		if err != nil {
+			panic(err)
+		}
+	}
+}
+
 // Migrate executes all the .sql files found inside the models directory
 func Migrate(db *sql.DB) {
 
-	// Get all files in models directory
-	files, err := ioutil.ReadDir("./models/")
-	if err != nil {
-		log.Fatal(err)
-	}
+	// Get all SQL files in models directory
+	files := filesWithExtension("./models/", ".sql")
 
 	// For each SQL file, read it and execute it
 	for _, f := range files {
-		if strings.HasSuffix(f.Name(), ".sql") {
-			// f is an SQL file, read it
-			file, err := ioutil.ReadFile("./models/" + f.Name())
-
-			if err != nil {
-				panic(err)
-			}
-
-			// split it into seperate queries
-			queries := strings.Split(string(file), ";")
-
-			// and execute them one by one
-			// except for the last one which is expty because of the split
-			for _, query := range queries[0 : len(queries)-1] {
-				_, err := db.Exec(query)
-				if err != nil {
-					panic(err)
-				}
-			}
-		}
+		fmt.Println(f.Name())
+		executeSQLFile(db, "./models/"+f.Name())
 	}
 }

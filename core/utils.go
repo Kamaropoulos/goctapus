@@ -1,8 +1,12 @@
 package goctapus
 
 import (
+	"io/ioutil"
+	"log"
 	"net"
+	"os"
 	"strconv"
+	"strings"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -32,4 +36,21 @@ func isUsablePort(str string) (bool, string) {
 
 		return true, ""
 	}
+}
+
+func filesWithExtension(dir string, extension string) []os.FileInfo {
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	filesWithExt := make([]os.FileInfo, 0)
+
+	for _, f := range files {
+		if strings.HasSuffix(f.Name(), extension) {
+			filesWithExt = append(filesWithExt, f)
+		}
+	}
+
+	return filesWithExt
 }
