@@ -7,7 +7,7 @@ import (
 	"os"
 	"strconv"
 
-	"github.com/Kamaropoulos/go-echo-vue-mysql/handlers"
+	"github.com/Kamaropoulos/goctapus/handlers"
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
