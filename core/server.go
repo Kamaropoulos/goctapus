@@ -96,11 +96,9 @@ func getArgs(args []string) (string, string, string, string, string) {
 func Init(args []string) {
 	appPort, dbHost, dbPort, dbUser, dbPass = getArgs(args[1:])
 
-	_ = appPort
-	_ = dbHost
-	_ = dbPort
-	_ = dbUser
-	_ = dbPass
+	db = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
+
+	Migrate(db)
 
 	e = echo.New()
 }
