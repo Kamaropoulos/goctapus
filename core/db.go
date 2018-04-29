@@ -26,15 +26,9 @@ func InitDB(dbString string) *sql.DB {
 	return db
 }
 
-func executeSQLFile(db *sql.DB, pathtofile string) {
-	file, err := ioutil.ReadFile(pathtofile)
-
-	if err != nil {
-		panic(err)
-	}
-
+func executeSQLString(db *sql.DB, script string) {
 	// split it into seperate queries
-	queries := strings.Split(string(file), ";")
+	queries := strings.Split(script, ";")
 
 	// and execute them one by one
 	// except for the last one which is expty because of the split
@@ -44,6 +38,16 @@ func executeSQLFile(db *sql.DB, pathtofile string) {
 			panic(err)
 		}
 	}
+}
+
+func executeSQLFile(db *sql.DB, pathtofile string) {
+	file, err := ioutil.ReadFile(pathtofile)
+
+	if err != nil {
+		panic(err)
+	}
+
+	executeSQLString(db, string(file))
 }
 
 // Migrate executes all the .sql files found inside the models directory
