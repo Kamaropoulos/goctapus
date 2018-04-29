@@ -40,4 +40,4 @@ where you'll have to replace:
 - `[DB_Hostname/IP]` with the hostname or the IP the Database is running on,
 - `[DB_Port]` with the Port the Database is listening to.
 
-#### To try the application, point your browser to http://localhost:`[applicationPort]`
+#### To try the application, point your browser to http://localhost:[applicationPort]
