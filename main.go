@@ -12,10 +12,13 @@ import (
 func main() {
 	goctapus.Init(os.Args)
 
+	goctapus.ConnectDB("goapp")
+	goctapus.Migrate(goctapus.Databases["goapp"], "./models/tasks.sql")
+
 	goctapus.File("/", "public/index.html")
-	goctapus.GET("/tasks", handlers.GetTasks(goctapus.Database))
-	goctapus.PUT("/tasks", handlers.PutTask(goctapus.Database))
-	goctapus.DELETE("/tasks/:id", handlers.DeleteTask(goctapus.Database))
+	goctapus.GET("/tasks", handlers.GetTasks(goctapus.Databases["goapp"]))
+	goctapus.PUT("/tasks", handlers.PutTask(goctapus.Databases["goapp"]))
+	goctapus.DELETE("/tasks/:id", handlers.DeleteTask(goctapus.Databases["goapp"]))
 
 	goctapus.Start()
 }

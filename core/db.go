@@ -2,7 +2,6 @@ package goctapus
 
 import (
 	"database/sql"
-	"fmt"
 	"io/ioutil"
 	"strings"
 
@@ -50,21 +49,7 @@ func executeSQLFile(db *sql.DB, pathtofile string) {
 	executeSQLString(db, string(file))
 }
 
-// Migrate executes all the .sql files found inside the models directory
-func Migrate(db *sql.DB) {
-
-	executeSQLFile(db, "./models/main.sql")
-
-	// Get all SQL files in models directory
-	files := filesWithExtension("./models/", ".sql")
-
-	// For each SQL file, read it and execute it
-	for _, f := range files {
-		if f.Name() == "main.sql" {
-			continue
-		}
-
-		fmt.Println(f.Name())
-		executeSQLFile(db, "./models/"+f.Name())
-	}
+// Migrate xecutes an SQL File against a specific DB
+func Migrate(db *sql.DB, filename string) {
+	executeSQLFile(db, filename)
 }

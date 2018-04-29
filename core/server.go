@@ -13,7 +13,7 @@ var dbPort string
 var dbUser string
 var dbPass string
 
-var Database *sql.DB
+var Databases map[string]*sql.DB
 
 var e *echo.Echo
 
@@ -95,11 +95,25 @@ func getArgs(args []string) (string, string, string, string, string) {
 func Init(args []string) {
 	appPort, dbHost, dbPort, dbUser, dbPass = getArgs(args[1:])
 
-	Database = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
+	//Database = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
 
-	Migrate(Database)
+	// Migrate(Database)
+
+	Databases = make(map[string]*sql.DB)
 
 	e = echo.New()
+}
+
+func ConnectDB(db_name string) {
+
+	// Connects to a database and stores the connection to an object in the Databases Map
+	Databases[db_name] = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
+
+	// Run the Database creation and USE queries
+	sql := `CREATE DATABASE IF NOT EXISTS ` + db_name + `;
+			USE ` + db_name + `;`
+	executeSQLString(Databases[db_name], sql)
+
 }
 
 func Start() {
