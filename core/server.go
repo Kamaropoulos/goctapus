@@ -100,18 +100,6 @@ func Init(args []string) {
 	e = echo.New()
 }
 
-func ConnectDB(db_name string) {
-
-	// Connects to a database and stores the connection to an object in the Databases Map
-	Databases[db_name] = InitDB(dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/?charset=utf8")
-
-	// Run the Database creation and USE queries
-	sql := `CREATE DATABASE IF NOT EXISTS ` + db_name + `;
-			USE ` + db_name + `;`
-	executeSQLString(Databases[db_name], sql)
-
-}
-
 func Start() {
 	e.Start(":" + appPort)
 }
