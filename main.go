@@ -3,7 +3,7 @@ package main
 import (
 	"os"
 
-	"./handlers"
+	"github.com/Kamaropoulos/goctapus/handlers"
 	"github.com/Kamaropoulos/goctapus/core"
 
 	_ "github.com/go-sql-driver/mysql"
