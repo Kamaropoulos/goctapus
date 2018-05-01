@@ -5,4 +5,4 @@ WORKDIR /app
 RUN go get github.com/labstack/echo
 RUN go build -o main . 
 EXPOSE 8000
-CMD ["/app/main", "${GOAPPPORT} ${GOAPPDBUSER} ${GOAPPDBPASS} ${GOAPPDBHOST} ${GOAPPDBPORT}"]
+CMD ["/app/main", "$GOAPPPORT $GOAPPDBUSER $GOAPPDBPASS $GOAPPDBHOST $GOAPPDBPORT"]
