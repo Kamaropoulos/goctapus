@@ -3,14 +3,14 @@ package main
 import (
 	"os"
 
-	"github.com/Kamaropoulos/goctapus/handlers"
 	"github.com/Kamaropoulos/goctapus/core"
+	"github.com/Kamaropoulos/goctapus/handlers"
 
 	_ "github.com/go-sql-driver/mysql"
 )
 
 func main() {
-	goctapus.Init(os.Args)
+	goctapus.Init(os.Args, "debug")
 
 	goctapus.ConnectDB("goapp")
 	goctapus.Migrate(goctapus.Databases["goapp"], "./models/tasks.sql")

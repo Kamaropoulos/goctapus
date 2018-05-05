@@ -5,6 +5,8 @@ import (
 
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/labstack/echo"
+
+	Log "github.com/sirupsen/logrus"
 )
 
 var appPort string
@@ -92,16 +94,33 @@ func getArgs(args []string) (string, string, string, string, string) {
 	return appPort, dbHost, dbPort, dbUser, dbPass
 }
 
-func Init(args []string) {
+func Init(args []string, logLevel string) {
+
+	InitLogger(logLevel)
+
+	Log.Info("Initializing Goctapus...")
+
 	appPort, dbHost, dbPort, dbUser, dbPass = getArgs(args[1:])
+
+	Log.WithFields(Log.Fields{
+		"appPort": appPort,
+		"dbHost":  dbHost,
+		"dbPort":  dbPort,
+		"dbUser":  dbUser,
+		"dbPass":  dbPass,
+	}).Debug("Current server configuration:")
 
 	Databases = make(map[string]*sql.DB)
 
 	e = echo.New()
+
+	Log.Debug("Goctapus Initialization done.")
 }
 
 func Start() {
+	Log.Info("Starting up web server...")
 	e.Start(":" + appPort)
+	Log.Debug("Web Server started succesfully.")
 }
 
 func GET(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
