@@ -21,7 +21,7 @@ type Configuration struct {
 
 var Databases map[string]*sql.DB
 
-var e *echo.Echo
+var Server *echo.Echo
 
 func getArgs(args []string) Configuration {
 
@@ -118,33 +118,13 @@ func Init(args []string, logLevel string) {
 
 	Databases = make(map[string]*sql.DB)
 
-	e = echo.New()
+	Server = echo.New()
 
 	Log.Debug("Goctapus Initialization done.")
 }
 
 func Start() {
 	Log.Info("Starting up web server...")
-	e.Start(":" + Config.appPort)
+	Server.Start(":" + Config.appPort)
 	Log.Debug("Web Server started succesfully.")
-}
-
-func GET(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	e.GET(path, handler)
-}
-
-func POST(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	e.POST(path, handler)
-}
-
-func PUT(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	e.PUT(path, handler)
-}
-
-func DELETE(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	e.DELETE(path, handler)
-}
-
-func File(path, file string) {
-	e.File(path, file)
 }
