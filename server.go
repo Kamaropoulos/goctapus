@@ -117,6 +117,7 @@ func Init(args []string, logLevel string) {
 	}).Debug("Current server configuration:")
 
 	Databases = make(map[string]*sql.DB)
+	Routes = make(map[string]Route)
 
 	Server = echo.New()
 

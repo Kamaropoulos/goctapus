@@ -2,6 +2,8 @@ package goctapus
 
 import (
 	"github.com/labstack/echo"
+
+	Log "github.com/sirupsen/logrus"
 )
 
 type Route struct {
@@ -33,6 +35,20 @@ func AddStatic(path, file string) {
 }
 
 func AddEndpoint(routeInfo Route) {
+	//Generate route descriptor string
+	routeName := routeInfo.Method + ":" + routeInfo.Path
+	//Check if the route already exists
+	if _, ok := Routes[routeName]; ok {
+		// Route already exists
+		// Just return with a message
+		Log.Warning("Could not add endpoint " + routeName + ". Route already exists!")
+		return
+	}
+
+	// Route doesn't exist
+	// Store it to the map and create it
+	Routes[routeName] = routeInfo
+
 	switch routeInfo.Method {
 	case "GET":
 		GET(routeInfo)
