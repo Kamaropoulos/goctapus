@@ -12,20 +12,20 @@ type Route struct {
 
 var Routes map[string]Route
 
-func GET(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	Server.GET(path, handler)
+func GET(routeInfo Route) {
+	Server.GET(routeInfo.Path, routeInfo.Handler)
 }
 
-func POST(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	Server.POST(path, handler)
+func POST(routeInfo Route) {
+	Server.POST(routeInfo.Path, routeInfo.Handler)
 }
 
-func PUT(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	Server.PUT(path, handler)
+func PUT(routeInfo Route) {
+	Server.PUT(routeInfo.Path, routeInfo.Handler)
 }
 
-func DELETE(path string, handler echo.HandlerFunc, m ...echo.MiddlewareFunc) {
-	Server.DELETE(path, handler)
+func DELETE(routeInfo Route) {
+	Server.DELETE(routeInfo.Path, routeInfo.Handler)
 }
 
 func AddStatic(path, file string) {
@@ -35,16 +35,16 @@ func AddStatic(path, file string) {
 func AddEndpoint(routeInfo Route) {
 	switch routeInfo.Method {
 	case "GET":
-		GET(routeInfo.Path, routeInfo.Handler)
+		GET(routeInfo)
 		break
 	case "POST":
-		POST(routeInfo.Path, routeInfo.Handler)
+		POST(routeInfo)
 		break
 	case "PUT":
-		PUT(routeInfo.Path, routeInfo.Handler)
+		PUT(routeInfo)
 		break
 	case "DELETE":
-		DELETE(routeInfo.Path, routeInfo.Handler)
+		DELETE(routeInfo)
 		break
 	}
 }
