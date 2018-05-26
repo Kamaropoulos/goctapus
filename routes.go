@@ -1,33 +1,66 @@
 package goctapus
 
 import (
+	"github.com/didip/tollbooth"
+	"github.com/didip/tollbooth/limiter"
+	"github.com/didip/tollbooth_echo"
 	"github.com/labstack/echo"
 
 	Log "github.com/sirupsen/logrus"
 )
 
 type Route struct {
-	Method  string
-	Path    string
-	Handler echo.HandlerFunc
+	Method   string
+	Path     string
+	Handler  echo.HandlerFunc
+	Rate     float64
+	_limiter *limiter.Limiter
 }
 
 var Routes map[string]Route
 
 func GET(routeInfo Route) {
-	Server.GET(routeInfo.Path, routeInfo.Handler)
+	//Check if Rate Limiter will be used for this route
+	if routeInfo.Rate > 0 {
+		// Register the route using the rate limiter middleware
+		Server.GET(routeInfo.Path, routeInfo.Handler, tollbooth_echo.LimitHandler(routeInfo._limiter))
+	} else {
+		// Register the route without a rate limiter
+		Server.GET(routeInfo.Path, routeInfo.Handler)
+	}
 }
 
 func POST(routeInfo Route) {
-	Server.POST(routeInfo.Path, routeInfo.Handler)
+	//Check if Rate Limiter will be used for this route
+	if routeInfo.Rate > 0 {
+		// Register the route using the rate limiter middleware
+		Server.POST(routeInfo.Path, routeInfo.Handler, tollbooth_echo.LimitHandler(routeInfo._limiter))
+	} else {
+		// Register the route without a rate limiter
+		Server.POST(routeInfo.Path, routeInfo.Handler)
+	}
 }
 
 func PUT(routeInfo Route) {
-	Server.PUT(routeInfo.Path, routeInfo.Handler)
+	//Check if Rate Limiter will be used for this route
+	if routeInfo.Rate > 0 {
+		// Register the route using the rate limiter middleware
+		Server.PUT(routeInfo.Path, routeInfo.Handler, tollbooth_echo.LimitHandler(routeInfo._limiter))
+	} else {
+		// Register the route without a rate limiter
+		Server.PUT(routeInfo.Path, routeInfo.Handler)
+	}
 }
 
 func DELETE(routeInfo Route) {
-	Server.DELETE(routeInfo.Path, routeInfo.Handler)
+	//Check if Rate Limiter will be used for this route
+	if routeInfo.Rate > 0 {
+		// Register the route using the rate limiter middleware
+		Server.DELETE(routeInfo.Path, routeInfo.Handler, tollbooth_echo.LimitHandler(routeInfo._limiter))
+	} else {
+		// Register the route without a rate limiter
+		Server.DELETE(routeInfo.Path, routeInfo.Handler)
+	}
 }
 
 func AddStatic(path, file string) {
@@ -46,7 +79,12 @@ func AddEndpoint(routeInfo Route) {
 	}
 
 	// Route doesn't exist
-	// Store it to the map and create it
+	// Create Rate Limiter if Rate value is set
+	if routeInfo.Rate > 0 {
+		routeInfo._limiter = tollbooth.NewLimiter(routeInfo.Rate, nil)
+	}
+
+	// Store route into map and create it
 	Routes[routeName] = routeInfo
 
 	switch routeInfo.Method {
