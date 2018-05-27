@@ -4,9 +4,9 @@
 
 Goctapus is a wrapper around Echo that makes it easier to build REST APIs and applications that are based on them.
 
-For a sample application built on Goctapus, check Kamaropoulos/goctapus-example
+For a sample application built on Goctapus, check [Kamaropoulos/goctapus-example](https://github.com/Kamaropoulos/goctapus-example)
 
-There is also a fork (Kamaropoulos/goctapus-mongo) that uses MongoDB as the Database Backend but it is currently outdated and should be soon merged to this one.
+There is also a fork ([Kamaropoulos/goctapus-mongo](https://github.com/Kamaropoulos/goctapus-mongo)) that uses MongoDB as the Database Backend but it is currently outdated and should be soon merged to this one.
 
 This repository was originaly a fork of [ezynda3/go-echo-vue](https://github.com/ezynda3/go-echo-vue) in order to make it use MySQL as a database backend but it's purpose has changed a lot since then.
 
@@ -17,7 +17,7 @@ Goctapus makes it really easy and fast to get started and build your own REST AP
 All you have to do is:
 
 0. ### Install Go if you haven't already,
-1. ### Clone or copy the files from Kamaropoulos/goctapus-blank-template
+1. ### Clone or copy the files from [Kamaropoulos/goctapus-blank-template](https://github.com/Kamaropoulos/goctapus-blank-template)
 2. ### Connect to a database.
 
     Goctapus will connect to the MySQL server using the information passed to the command line. You can open connections to one or multiple MySQL databases using `ConnectDB()`. For example:
@@ -55,7 +55,7 @@ All you have to do is:
 
 4. ### Create your handlers and models
 
-    Create your handler and model files on the `handlers` and `models` folders. For more information and examples you can refer to the Echo documentation and the Kamaropoulos/goctapus-example application.
+    Create your handler and model files on the `handlers` and `models` folders. For more information and examples you can refer to the Echo documentation and the [Kamaropoulos/goctapus-example](https://github.com/Kamaropoulos/goctapus-example) application.
 
 5. ### Run your application!
 
