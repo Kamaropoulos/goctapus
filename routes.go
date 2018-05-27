@@ -69,7 +69,14 @@ func DELETE(routeInfo Route, m ...echo.MiddlewareFunc) {
 }
 
 func AddStatic(routeInfo Route, m ...echo.MiddlewareFunc) {
-	Server.File(routeInfo.Path, routeInfo.File, m...)
+	//Check if Rate Limiter will be used for this route
+	if routeInfo.Rate > 0 {
+		// Register the route using the rate limiter middleware
+		Server.File(routeInfo.Path, routeInfo.File, prependMiddlewareArray(m, tollbooth_echo.LimitHandler(routeInfo._limiter))...)
+	} else {
+		// Register the route without a rate limiter
+		Server.File(routeInfo.Path, routeInfo.File, m...)
+	}
 }
 
 func AddEndpoint(routeInfo Route, m ...echo.MiddlewareFunc) {
