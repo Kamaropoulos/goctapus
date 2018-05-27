@@ -16,7 +16,7 @@ Goctapus makes it really easy and fast to get started and build your own REST AP
 
 All you have to do is:
 
-0. ### Install Go if you haven't already,
+0. ### Install Go and setup MySQL if you haven't already,
 1. ### Clone or copy the files from [Kamaropoulos/goctapus-blank-template](https://github.com/Kamaropoulos/goctapus-blank-template)
 2. ### Connect to a database.
 
