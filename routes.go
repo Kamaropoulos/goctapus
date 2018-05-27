@@ -13,6 +13,7 @@ type Route struct {
 	Method   string
 	Path     string
 	Handler  echo.HandlerFunc
+	File     string
 	Rate     float64
 	_limiter *limiter.Limiter
 }
@@ -67,8 +68,8 @@ func DELETE(routeInfo Route, m ...echo.MiddlewareFunc) {
 	}
 }
 
-func AddStatic(path, file string, m ...echo.MiddlewareFunc) {
-	Server.File(path, file, m...)
+func AddStatic(routeInfo Route, m ...echo.MiddlewareFunc) {
+	Server.File(routeInfo.Path, routeInfo.File, m...)
 }
 
 func AddEndpoint(routeInfo Route, m ...echo.MiddlewareFunc) {
