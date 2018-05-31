@@ -34,6 +34,8 @@ func InitDB(dbString string) (*sql.DB, error) {
 	return db, nil
 }
 
+// ConnectDB connects to the database server, creates the passed DB name if it doesn't exists and sets it
+// as the current DB. It then stores the DB object into the public Databases object for later use.
 func ConnectDB(db_name string) {
 
 	Log.Debug("Connecting to Database server on " + Config.dbHost + ":" + Config.dbPort + "...")
@@ -61,6 +63,7 @@ func ConnectDB(db_name string) {
 
 }
 
+// executeSQLString executes a single SQL query
 func executeSQLString(db *sql.DB, script string) error {
 	// split it into seperate queries
 	queries := strings.Split(script, ";")
@@ -76,6 +79,7 @@ func executeSQLString(db *sql.DB, script string) error {
 	return nil;
 }
 
+// executeSQLFile executes a file containing SQL queries
 func executeSQLFile(db *sql.DB, pathtofile string) error {
 	file, err := ioutil.ReadFile(pathtofile)
 
@@ -86,7 +90,7 @@ func executeSQLFile(db *sql.DB, pathtofile string) error {
 	return executeSQLString(db, string(file))
 }
 
-// Migrate xecutes an SQL File against a specific DB
+// Migrate executes an SQL File against a specific DB
 func Migrate(db *sql.DB, filename string) {
 
 	Log.Debug("Exexuting SQL file \"" + filename + "\"...")
